@@ -37,14 +37,7 @@ const pausa = async () => {
     {
       type: 'input',
       name: 'enter',
-      message: `\n Presione ${'ENTER'.green} para continuar \n`,
-      validate: function (input) {
-        if (input === '\n' && input === '\r') {
-          return `\n Presione ${'ENTER'.green} para continuar \n`;
-        }
-
-        return true;
-      },
+      message: `\n ${'ENTER'.green} para continuar \n`,
     },
   ];
   console.log('\n');
@@ -56,10 +49,10 @@ const leerInput = async (message) => {
     {
       type: 'input',
       name: 'desc',
-      message: message,
+      message,
       validate(value) {
         if (value.length === 0) {
-          return 'Por favor ingrese un valor';
+          return 'Por favor ingrese una ciudad:';
         }
         return true;
       },
@@ -72,11 +65,11 @@ const leerInput = async (message) => {
 
 const listarLugares = async (lugares = []) => {
   const choices = lugares.map((lugar, i) => {
-    // El i es el indice de una tarea en el arreglo ( 0 el primero, por eso se le suma + 1 )
-    const idx = `${i + 1}`;
+    const idx = `${i + 1}.`.green;
+
     return {
       value: lugar.id,
-      name: `${(idx + '.').green} ${lugar.nombre}`,
+      name: `${idx} ${lugar.nombre}`,
     };
   });
 
@@ -90,46 +83,11 @@ const listarLugares = async (lugares = []) => {
       type: 'list',
       name: 'id',
       message: 'Seleccione lugar: ',
-      choices: choices,
+      choices,
     },
   ];
   const { id } = await inquirer.prompt(preguntas);
   return id;
-};
-
-const confirmarBorrado = async (message) => {
-  const question = [
-    {
-      type: 'confirm',
-      name: 'confirmation',
-      message,
-    },
-  ];
-
-  const { confirmation } = await inquirer.prompt(question);
-  return confirmation;
-};
-
-const mostrarListadoChecklist = async (tareas = []) => {
-  const choices = tareas.map((tarea, i) => {
-    const idx = `${i + 1}`;
-    return {
-      value: tarea.id,
-      name: `${(idx + '.').green} ${tarea.desc}`,
-      checked: tarea.completadoEn ? true : false, // Pone  true el completadoEn si marco la tarea
-    };
-  });
-
-  const pregunta = [
-    {
-      type: 'checkbox',
-      name: 'ids',
-      message: 'Selecciones',
-      choices,
-    },
-  ];
-  const { ids } = await inquirer.prompt(pregunta);
-  return ids;
 };
 
 module.exports = {
@@ -137,6 +95,4 @@ module.exports = {
   pausa,
   leerInput,
   listarLugares,
-  confirmarBorrado,
-  mostrarListadoChecklist,
 };
